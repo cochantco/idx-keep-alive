@@ -1,13 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const app = express();
 
-// 基本路由，确认服务器运行
+// 健康检查端点
 app.get('/', (req, res) => {
   res.send('Keep-alive server is running!');
 });
 
-// 定时请求预览 URL 保持活跃
+// 保活函数
 const keepAlive = () => {
   const previewUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
   http.get(previewUrl, (res) => {
@@ -24,5 +25,5 @@ setInterval(keepAlive, 5 * 60 * 1000);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-  keepAlive(); // 启动时立即 ping
+  keepAlive();
 });
